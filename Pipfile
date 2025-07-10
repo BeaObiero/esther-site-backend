@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aiosmtplib = "*"
+uvicorn = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = {extras = ["cryptography"], version = "*"}
+slowapi = "*"
+sqlalchemy = "*"
+fastapi = "*"
+python-dotenv = "*"
+pytest = "*"
+pytest-asyncio = "*"
+httpx = "*"
+
+[dev-packages]
+black = "*"
+isort = "*"
+pytest = "*"
+httpx = "*"
+
+[requires]
+python_version = "3.10"
