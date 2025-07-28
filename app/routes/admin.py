@@ -215,7 +215,7 @@ def filter_invoices(
         "user_id": inv.user_id
     } for inv in query.all()]
 
-    return success_response("Filtered invoices retrieved successfully", results)
+    return success_response("Filtered invoices retrieved successfully", results or [])
 
 
 # ---- 5. Generate Downloadable Invoice Report ----

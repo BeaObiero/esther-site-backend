@@ -2,16 +2,18 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
+
 from app.db.database import get_db
 from app.utils.email_sender import send_email
 from app.utils.response_helper import success_response
+from app.schemas import ContactForm
 
 router = APIRouter()
 
 
 
 
-@router.post("/contact", status_code=200)
+@router.post("/")
 def submit_contact(form: ContactForm, db: Session = Depends(get_db)):
     subject = f"New Contact from {form.name}"
     body = f"Message:\n{form.message}\n\nReply to: {form.email}"

@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -32,7 +33,6 @@ app.include_router(document.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(invoice.router, prefix="/api/invoices", tags=["Invoices"])
 app.include_router(admin.router, prefix="/api", tags=["Admin"])
 app.include_router(booking.router, prefix="/api", tags=["Booking"])
-
 
 # Health check
 @app.get("/")

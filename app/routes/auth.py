@@ -18,15 +18,17 @@ router = APIRouter()
 
 @router.post("/register", response_model=Token)
 def register_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.email == user.email).first()
-    if db_user:
+    existing_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed_password = get_password_hash(user.password)
     new_user = models.User(
+        name=user.name,
         email=user.email,
-        hashed_password=hashed_password,
         full_name=user.full_name,
+        hashed_password=hashed_password,
+        is_active=True,
     )
     db.add(new_user)
     db.commit()
@@ -34,8 +36,8 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
     access_token = create_access_token(data={"sub": new_user.email})
     return success_response(
-        data={"access_token": access_token, "token_type": "bearer"},
         message="Registration successful",
+        data={"access_token": access_token, "token_type": "bearer"}
     )
 
 
@@ -47,22 +49,30 @@ def login_user(user: UserLogin, db: Session = Depends(get_db)):
 
     access_token = create_access_token(data={"sub": db_user.email})
     return success_response(
-        data={"access_token": access_token, "token_type": "bearer"},
         message="Login successful",
+        data={"access_token": access_token, "token_type": "bearer"}
     )
 
 
-@router.get("/me", response_model=UserCreate)
+@router.get("/me")
 def get_me(current_user: UserModel = Depends(get_current_user)):
+    user_data = {
+        "id": current_user.id,
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "name": current_user.name,
+        "is_admin": current_user.is_admin,
+        "is_active": current_user.is_active,
+    }
     return success_response(
-        data=current_user,
         message="User profile fetched successfully",
+        data=user_data
     )
 
 
 @router.get("/dashboard")
 def dashboard(current_user: UserModel = Depends(get_current_user)):
     return success_response(
-        data={"full_name": current_user.full_name},
         message=f"Welcome, {current_user.full_name}!",
+        data={"full_name": current_user.full_name}
     )

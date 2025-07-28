@@ -20,8 +20,8 @@ def generate_invoice(
     client_email: str,
     service_description: str,
     amount_kes: float,
+    background_tasks: BackgroundTasks,  
     send_via_email: bool = True,
-    background_tasks: BackgroundTasks = Depends(),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
